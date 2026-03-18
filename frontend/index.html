@@ -197,6 +197,72 @@
     }
     .card-final h3 { color: var(--final); }
 
+    .dashboard {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.3s forwards;
+    }
+    
+    .dash-metric {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      flex: 1;
+      text-align: center;
+    }
+    
+    .dash-metric label {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .dash-metric .value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .progress-bar-container {
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      height: 8px;
+      width: 100%;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+      transition: width 1s ease-out;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+    .badge-approve { background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid #10b981; }
+    .badge-refer { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid #f59e0b; }
+    .badge-reject { background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid #ef4444; }
+
+    .agent-explanations h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: white;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 0.5rem;
+    }
+
     @keyframes fadeUp {
       to {
         opacity: 1;
@@ -349,27 +415,63 @@
         
         loader.style.display = 'none';
         
-        // Build beautiful result cards structurally using the JSON keys
+        // Extract nested structured JSON from final underwriting decision
+        let finalData = data.final || {};
+        if (typeof finalData === 'string') {
+          try { finalData = JSON.parse(finalData); } catch (e) { finalData = { explanation: finalData }; }
+        }
+
+        const rScore = finalData.risk_score || 0;
+        const premium = finalData.premium || 0;
+        const decision = finalData.decision || 'Refer';
+        const explanation = finalData.explanation || 'No data';
+        
+        let decisionClass = 'badge-refer';
+        if(decision.toLowerCase() === 'approve') decisionClass = 'badge-approve';
+        if(decision.toLowerCase() === 'reject') decisionClass = 'badge-reject';
+
         outputBoard.innerHTML = `
-          <div class="result-card card-risk" style="animation-delay: 0.1s">
-            <h3>🔴 Risk Analysis</h3>
-            <p>${data.risk || 'No data'}</p>
+          <div class="dashboard">
+            <div class="dash-metric">
+              <label>Risk Score</label>
+              <div class="value">${rScore}/100</div>
+              <div class="progress-bar-container">
+                <div class="progress-bar" style="width: ${rScore}%;"></div>
+              </div>
+            </div>
+            <div class="dash-metric">
+              <label>Premium</label>
+              <div class="value">£${premium.toLocaleString()}</div>
+            </div>
+            <div class="dash-metric">
+              <label>Decision</label>
+              <div class="badge ${decisionClass}">${decision}</div>
+            </div>
           </div>
-          <div class="result-card card-fraud" style="animation-delay: 0.2s">
-            <h3>🟠 Fraud Verification</h3>
-            <p>${data.fraud || 'No data'}</p>
-          </div>
-          <div class="result-card card-regulation" style="animation-delay: 0.3s">
-            <h3>🔵 Regulatory Compliance</h3>
-            <p>${data.regulation || 'No data'}</p>
-          </div>
-          <div class="result-card card-debate" style="animation-delay: 0.4s">
-            <h3>🟣 Council Debate Summary</h3>
-            <p>${data.debate || 'No data'}</p>
-          </div>
-          <div class="result-card card-final" style="animation-delay: 0.5s">
-            <h3>🟢 Final Underwriting Decision</h3>
-            <p>${data.final || 'No data'}</p>
+
+          <div class="agent-explanations">
+            <h2>Agent Explanations</h2>
+            
+            <div class="result-card card-risk" style="animation-delay: 0.1s">
+              <h3>🔴 Risk Analysis</h3>
+              <p>${data.risk || 'No data'}</p>
+            </div>
+            <div class="result-card card-fraud" style="animation-delay: 0.2s">
+              <h3>🟠 Fraud Verification</h3>
+              <p>${data.fraud || 'No data'}</p>
+            </div>
+            <div class="result-card card-regulation" style="animation-delay: 0.3s">
+              <h3>🔵 Regulatory Compliance</h3>
+              <p>${data.regulation || 'No data'}</p>
+            </div>
+            <div class="result-card card-debate" style="animation-delay: 0.4s">
+              <h3>🟣 Council Debate Summary</h3>
+              <p>${data.debate || 'No data'}</p>
+            </div>
+            <div class="result-card card-final" style="animation-delay: 0.5s">
+              <h3>🟢 Final Underwriting Explanation</h3>
+              <p>${explanation}</p>
+            </div>
           </div>
         `;
 
