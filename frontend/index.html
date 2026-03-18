@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Insurance Council</title>
+</head>
+<body>
+
+<h1>🚗 Insurance Council AI</h1>
+
+<input id="age" value="30"><br>
+<input id="vehicle" value="BMW"><br>
+<input id="postcode" value="SE15"><br>
+<input id="accidents" value="1"><br>
+<input id="mileage" value="12000"><br>
+<input id="claim_prob" value="0.1"><br>
+<input id="claim_cost" value="3000"><br>
+<input id="fraud_score" value="0.2"><br>
+
+<button onclick="run()">Run</button>
+
+<pre id="out"></pre>
+
+<script>
+const API = "https://YOUR-RENDER-URL.onrender.com/underwrite";
+
+async function run() {
+  const res = await fetch(API, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      age: +age.value,
+      vehicle: vehicle.value,
+      postcode: postcode.value,
+      accidents: +accidents.value,
+      annual_mileage: +mileage.value,
+      claim_probability: +claim_prob.value,
+      expected_claim_cost: +claim_cost.value,
+      fraud_score: +fraud_score.value
+    })
+  });
+
+  const data = await res.json();
+  out.textContent = JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+from llm_client import call_llm
+
+async def debate(risk, fraud, regulation):
+    return await call_llm(
+        "mistralai/mixtral-8x7b",
+        "You are a moderator of an insurance council.",
+        f"""
+Risk Analyst: {risk}
+Fraud Analyst: {fraud}
+Regulation Advisor: {regulation}
+
+Make them debate and summarize disagreements.
+"""
+    )
