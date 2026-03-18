@@ -1,47 +1,391 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Insurance Council</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insurance Council AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --accent: #8b5cf6;
+      --accent-hover: #a78bfa;
+      --text: #f8fafc;
+      --text-muted: #cbd5e1;
+      --risk: #ef4444;
+      --fraud: #f59e0b;
+      --regulation: #3b82f6;
+      --debate: #8b5cf6;
+      --final: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-weight: 800;
+      font-size: 3rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(to right, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      gap: 2rem;
+      width: 100%;
+      max-width: 1200px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column;
+      }
+    }
+
+    .panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 2rem;
+      width: 100%;
+    }
+
+    .form-panel {
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .results-panel {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      color: white;
+      padding: 1rem;
+      border-radius: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+    }
+
+    button {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 1.2rem;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -10px var(--accent);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      background: #475569;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .result-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.5s forwards;
+      border-left: 4px solid var(--accent);
+    }
+
+    .result-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .result-card p {
+      line-height: 1.6;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      white-space: pre-wrap;
+    }
+
+    /* Label Colors */
+    .card-risk { border-left-color: var(--risk); }
+    .card-risk h3 { color: var(--risk); }
+    
+    .card-fraud { border-left-color: var(--fraud); }
+    .card-fraud h3 { color: var(--fraud); }
+    
+    .card-regulation { border-left-color: var(--regulation); }
+    .card-regulation h3 { color: var(--regulation); }
+    
+    .card-debate { border-left-color: var(--debate); }
+    .card-debate h3 { color: var(--debate); }
+    
+    .card-final {
+      border-left-color: var(--final);
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .card-final h3 { color: var(--final); }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Loader */
+    .loader {
+      display: none;
+      width: 48px;
+      height: 48px;
+      border: 5px solid #fff;
+      border-bottom-color: var(--accent);
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+      margin: 2rem auto;
+    }
+
+    .loader-container {
+      display: none;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @keyframes rotation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-msg {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--text-muted);
+      margin-top: 4rem;
+      font-size: 1.2rem;
+    }
+
+  </style>
 </head>
 <body>
 
-<h1>🚗 Insurance Council AI</h1>
+  <h1>Insurance Council AI</h1>
 
-<input id="age" value="30"><br>
-<input id="vehicle" value="BMW"><br>
-<input id="postcode" value="SE15"><br>
-<input id="accidents" value="1"><br>
-<input id="mileage" value="12000"><br>
-<input id="claim_prob" value="0.1"><br>
-<input id="claim_cost" value="3000"><br>
-<input id="fraud_score" value="0.2"><br>
+  <div class="container">
+    <div class="panel form-panel">
+      <div class="input-group">
+        <label>Driver Age</label>
+        <input type="number" id="age" value="30">
+      </div>
+      <div class="input-group">
+        <label>Vehicle Model</label>
+        <input type="text" id="vehicle" value="BMW">
+      </div>
+      <div class="input-group">
+        <label>Postcode</label>
+        <input type="text" id="postcode" value="SE15">
+      </div>
+      <div class="input-group">
+        <label>Recent Accidents</label>
+        <input type="number" id="accidents" value="1">
+      </div>
+      <div class="input-group">
+        <label>Annual Mileage</label>
+        <input type="number" id="mileage" value="12000">
+      </div>
+      <div class="input-group">
+        <label>Base Claim Probability</label>
+        <input type="number" step="0.1" id="claim_prob" value="0.1">
+      </div>
+      <div class="input-group">
+        <label>Expected Claim Cost (£)</label>
+        <input type="number" id="claim_cost" value="3000">
+      </div>
+      <div class="input-group">
+        <label>Initial Fraud Score</label>
+        <input type="number" step="0.1" id="fraud_score" value="0.2">
+      </div>
 
-<button onclick="run()">Run</button>
+      <button id="runBtn" onclick="run()">Analyze Case</button>
+      <div id="error" class="error-msg"></div>
+    </div>
 
-<pre id="out"></pre>
+    <div class="panel results-panel" id="results">
+      <div class="empty-state" id="emptyState">
+        Fill out the applicant details and click "Analyze Case" to invoke the AI Council.
+      </div>
 
-<script>
-const API = "https://insurance-council-app.onrender.com";
-async function run() {
-  const res = await fetch(API, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      age: +age.value,
-      vehicle: vehicle.value,
-      postcode: postcode.value,
-      accidents: +accidents.value,
-      annual_mileage: +mileage.value,
-      claim_probability: +claim_prob.value,
-      expected_claim_cost: +claim_cost.value,
-      fraud_score: +fraud_score.value
-    })
-  });
+      <div class="loader-container" id="loaderContainer">
+        <span class="loader"></span>
+        <p>The council is debating. This may take a moment...</p>
+      </div>
 
-  const data = await res.json();
-  out.textContent = JSON.stringify(data, null, 2);
-}
-</script>
+      <!-- Results will be injected here -->
+      <div id="outputBoard"></div>
+    </div>
+  </div>
+
+  <script>
+    // MAKE SURE THIS IS POINTING TO YOUR LIVE URL IF DEPLOYING (e.g. "https://my-backend.onrender.com/underwrite")
+    // For local testing: "http://localhost:8000/underwrite"
+    const API = "https://insurance-council-app.onrender.com/underwrite";
+
+    async function run() {
+      const btn = document.getElementById('runBtn');
+      const loader = document.getElementById('loaderContainer');
+      const emptyState = document.getElementById('emptyState');
+      const outputBoard = document.getElementById('outputBoard');
+      const errorDiv = document.getElementById('error');
+
+      // Reset UI
+      btn.disabled = true;
+      btn.innerHTML = "Processing...";
+      errorDiv.style.display = 'none';
+      emptyState.style.display = 'none';
+      outputBoard.innerHTML = '';
+      loader.style.display = 'flex';
+
+      try {
+        const res = await fetch(API, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            age: +document.getElementById('age').value,
+            vehicle: document.getElementById('vehicle').value,
+            postcode: document.getElementById('postcode').value,
+            accidents: +document.getElementById('accidents').value,
+            annual_mileage: +document.getElementById('mileage').value,
+            claim_probability: +document.getElementById('claim_prob').value,
+            expected_claim_cost: +document.getElementById('claim_cost').value,
+            fraud_score: +document.getElementById('fraud_score').value
+          })
+        });
+
+        if (!res.ok) throw new Error(`Server returned ${res.status}: ${res.statusText}`);
+
+        const data = await res.json();
+        
+        loader.style.display = 'none';
+        
+        // Build beautiful result cards structurally using the JSON keys
+        outputBoard.innerHTML = `
+          <div class="result-card card-risk" style="animation-delay: 0.1s">
+            <h3>🔴 Risk Analysis</h3>
+            <p>${data.risk || 'No data'}</p>
+          </div>
+          <div class="result-card card-fraud" style="animation-delay: 0.2s">
+            <h3>🟠 Fraud Verification</h3>
+            <p>${data.fraud || 'No data'}</p>
+          </div>
+          <div class="result-card card-regulation" style="animation-delay: 0.3s">
+            <h3>🔵 Regulatory Compliance</h3>
+            <p>${data.regulation || 'No data'}</p>
+          </div>
+          <div class="result-card card-debate" style="animation-delay: 0.4s">
+            <h3>🟣 Council Debate Summary</h3>
+            <p>${data.debate || 'No data'}</p>
+          </div>
+          <div class="result-card card-final" style="animation-delay: 0.5s">
+            <h3>🟢 Final Underwriting Decision</h3>
+            <p>${data.final || 'No data'}</p>
+          </div>
+        `;
+
+      } catch (err) {
+        console.error(err);
+        loader.style.display = 'none';
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = `Error: ${err.message}. Ensure your backend server is running and the API URL is correct.`;
+        emptyState.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = "Analyze Case";
+      }
+    }
+  </script>
 
 </body>
 </html>
