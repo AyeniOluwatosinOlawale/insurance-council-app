@@ -7,6 +7,9 @@ load_dotenv()
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 async def call_llm(model, system, prompt):
+    if not API_KEY or API_KEY == "your_api_key_here":
+        return f"[MOCK] Simulated response from {model} for prompt '{prompt[:30]}...'"
+    
     async with httpx.AsyncClient() as client:
         res = await client.post(
             "https://openrouter.ai/api/v1/chat/completions",
