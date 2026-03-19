@@ -443,6 +443,7 @@
         const rScore = finalData.risk_score || 0;
         const premium = finalData.premium || 0;
         const decision = finalData.decision || 'refer';
+        const explanation = finalData.explanation || 'No data';
         
         const riskSum = finalData.risk_summary || `score: ${(rScore/100).toFixed(2)}`;
         const fraudSum = finalData.fraud_summary || 'unknown';
@@ -495,6 +496,10 @@
             <div class="result-card card-debate" style="animation-delay: 0.4s">
               <h3>🟣 Council Debate Summary</h3>
               <p>${data.debate || 'No data'}</p>
+            </div>
+            <div class="result-card card-final" style="animation-delay: 0.5s">
+              <h3>🟢 Final Underwriting Explanation</h3>
+              <p>${explanation}</p>
             </div>
           </div>
         `;

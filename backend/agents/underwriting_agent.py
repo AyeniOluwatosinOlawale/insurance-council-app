@@ -23,7 +23,8 @@ You MUST return EXACTLY and ONLY a valid JSON object (no markdown, no extra text
 {{
   "decision": "approve" | "reject" | "refer",
   "fraud_summary": "very short 2-4 word summary (e.g. 'low risk', 'high fraud signals')",
-  "regulation_summary": "very short 2-4 word summary (e.g. 'compliant', 'flagged')"
+  "regulation_summary": "very short 2-4 word summary (e.g. 'compliant', 'flagged')",
+  "explanation": "A detailed 2-3 sentence paragraph explaining your final underwriting logic"
 }}
 """
     )
