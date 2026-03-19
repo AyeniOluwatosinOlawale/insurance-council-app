@@ -1,9 +1,18 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from models import DriverProfile
 from council import run_insurance_council
+from ml.xgboost_model import init_xgboost_model
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("🚀 Starting app & Training ML Model...")
+    init_xgboost_model()
+    yield
+    print("🛑 Shutting down...")
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
