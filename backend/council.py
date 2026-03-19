@@ -4,8 +4,16 @@ from agents.regulation_agent import regulation_agent
 from agents.underwriting_agent import underwriting_agent
 from debate import debate
 from ml.xgboost_model import predict_risk
+from services.external_data import enrich_profile
 
 async def run_insurance_council(data):
+    # Data Integration: Pull from external databases
+    enriched_context = await enrich_profile(data)
+    
+    # Mathematical Quote Override using real external variables
+    data.expected_claim_cost = enriched_context["dynamic_expected_cost"]
+    data.enriched = enriched_context
+
     # Calculate real mathematical ML risk score via XGBoost
     ml_risk_score = predict_risk(data.age, data.vehicle, data.postcode, data.accidents, data.annual_mileage)
 
