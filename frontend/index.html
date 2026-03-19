@@ -391,6 +391,26 @@
       errorDiv.style.display = 'none';
       emptyState.style.display = 'none';
       outputBoard.innerHTML = '';
+
+      const vehicleVal = document.getElementById('vehicle').value.trim();
+      const postcodeVal = document.getElementById('postcode').value.trim();
+
+      if (!vehicleVal || vehicleVal.length < 2) {
+          errorDiv.style.display = 'block';
+          errorDiv.textContent = 'Error: Please enter a valid Car Model before proceeding.';
+          btn.disabled = false;
+          btn.innerHTML = "Analyze Case";
+          return;
+      }
+      
+      if (!postcodeVal || postcodeVal.length < 3) {
+          errorDiv.style.display = 'block';
+          errorDiv.textContent = 'Error: Please enter a valid Postcode before proceeding.';
+          btn.disabled = false;
+          btn.innerHTML = "Analyze Case";
+          return;
+      }
+
       loader.style.display = 'flex';
 
       try {
