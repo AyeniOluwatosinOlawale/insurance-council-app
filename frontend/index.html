@@ -445,10 +445,6 @@
         const decision = finalData.decision || 'refer';
         const explanation = finalData.explanation || 'No data';
         
-        const riskSum = finalData.risk_summary || `score: ${(rScore/100).toFixed(2)}`;
-        const fraudSum = finalData.fraud_summary || 'unknown';
-        const regSum = finalData.regulation_summary || 'unknown';
-        
         let decisionClass = 'badge-refer';
         if(decision.toLowerCase() === 'approve') decisionClass = 'badge-approve';
         if(decision.toLowerCase() === 'reject') decisionClass = 'badge-reject';
@@ -470,13 +466,6 @@
               <label>Decision</label>
               <div class="badge ${decisionClass}">${decision}</div>
             </div>
-          </div>
-
-          <div class="agent-explanations" style="animation: fadeUp 0.5s forwards; font-size: 1.3rem; line-height: 2.2; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 2rem;">
-            <div style="color: #f8fafc;">🧠 <strong>Risk Analyst</strong> &rarr; <span style="color: var(--text-muted);">${riskSum}</span></div>
-            <div style="color: #f8fafc;">🕵️ <strong>Fraud Agent</strong> &rarr; <span style="color: var(--text-muted);">${fraudSum}</span></div>
-            <div style="color: #f8fafc;">⚖️ <strong>Regulation</strong> &rarr; <span style="color: var(--text-muted);">${regSum}</span></div>
-            <div style="color: var(--accent);">🏦 <strong>Underwriter</strong> &rarr; ${decision} (£${premium.toLocaleString()})</div>
           </div>
 
           <div class="agent-explanations">
