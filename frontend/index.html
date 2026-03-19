@@ -471,11 +471,31 @@
             </div>
           </div>
 
-          <div class="agent-explanations" style="animation: fadeUp 0.5s forwards; font-size: 1.3rem; line-height: 2.2; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border);">
+          <div class="agent-explanations" style="animation: fadeUp 0.5s forwards; font-size: 1.3rem; line-height: 2.2; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 2rem;">
             <div style="color: #f8fafc;">🧠 <strong>Risk Analyst</strong> &rarr; <span style="color: var(--text-muted);">${riskSum}</span></div>
             <div style="color: #f8fafc;">🕵️ <strong>Fraud Agent</strong> &rarr; <span style="color: var(--text-muted);">${fraudSum}</span></div>
             <div style="color: #f8fafc;">⚖️ <strong>Regulation</strong> &rarr; <span style="color: var(--text-muted);">${regSum}</span></div>
             <div style="color: var(--accent);">🏦 <strong>Underwriter</strong> &rarr; ${decision} (£${premium.toLocaleString()})</div>
+          </div>
+
+          <div class="agent-explanations">
+            <h2>Detailed Agent Notes</h2>
+            <div class="result-card card-risk" style="animation-delay: 0.1s">
+              <h3>🔴 Risk Analysis</h3>
+              <p>${data.risk || 'No data'}</p>
+            </div>
+            <div class="result-card card-fraud" style="animation-delay: 0.2s">
+              <h3>🟠 Fraud Verification</h3>
+              <p>${data.fraud || 'No data'}</p>
+            </div>
+            <div class="result-card card-regulation" style="animation-delay: 0.3s">
+              <h3>🔵 Regulatory Compliance</h3>
+              <p>${data.regulation || 'No data'}</p>
+            </div>
+            <div class="result-card card-debate" style="animation-delay: 0.4s">
+              <h3>🟣 Council Debate Summary</h3>
+              <p>${data.debate || 'No data'}</p>
+            </div>
           </div>
         `;
 
