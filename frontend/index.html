@@ -444,7 +444,7 @@
         const premium = finalData.premium || 0;
         const decision = finalData.decision || 'refer';
         
-        const riskSum = finalData.risk_summary || \`score: \${(rScore/100).toFixed(2)}\`;
+        const riskSum = finalData.risk_summary || `score: ${(rScore/100).toFixed(2)}`;
         const fraudSum = finalData.fraud_summary || 'unknown';
         const regSum = finalData.regulation_summary || 'unknown';
         
