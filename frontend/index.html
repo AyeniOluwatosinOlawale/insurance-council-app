@@ -403,7 +403,7 @@
           return;
       }
       
-      const ukPostcodeRegex = /^[A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}$/i;
+      const ukPostcodeRegex = /^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i;
       if (!ukPostcodeRegex.test(postcodeVal)) {
           errorDiv.style.display = 'block';
           errorDiv.textContent = 'Error: Please enter a strictly valid UK Postcode before proceeding (e.g. SW1A 1AA or SE15).';
